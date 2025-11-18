@@ -16,7 +16,7 @@ if not API_TOKEN:
 
 async def cmd_start(message: Message):
     await message.answer(
-        "Привет! Отправь мне любое сообщение — я переверну его."
+        "Привет! Я пар"
     )
 
 
