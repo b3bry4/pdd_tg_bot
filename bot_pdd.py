@@ -1,50 +1,37 @@
 import os
 import asyncio
-from dotenv import load_dotenv
 
+from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher, F
 from aiogram.filters import Command
-from aiogram.types import (
-    Message,
-    ReplyKeyboardMarkup,
-    KeyboardButton
-)
+from aiogram.types import Message
 
+# грузим токен из .env
 load_dotenv()
 API_TOKEN = os.getenv("API_TOKEN")
 
-bot = Bot(token=API_TOKEN)
-dp = Dispatcher()
+if not API_TOKEN:
+    raise ValueError("API_TOKEN не найден в .env")
 
 
 async def cmd_start(message: Message):
-    keyboard = ReplyKeyboardMarkup(
-        keyboard=[
-            [KeyboardButton(text="Начать тест")],
-            [KeyboardButton(text="Помощь")]
-        ],
-        resize_keyboard=True
-    )
-
     await message.answer(
-        "Привет! Я бот по билетам ПДД.\n"
-        "Используй кнопки ниже, чтобы начать.",
-        reply_markup=keyboard
+        "Привет! Отправь мне любое сообщение — я переверну его."
     )
 
 
-@dp.message(F.text == "Начать тест")
-async def start_test(message: Message):
-    await message.reply("Отлично, выберите вариант!")
-
-
-@dp.message(F.text == "Помощь")
-async def help_me(message: Message):
-    await message.reply("Не работает")
+async def echo_reverse(message: Message):
+    text = message.text or ""
+    await message.answer(text[::-1])
 
 
 async def main():
+    bot = Bot(token=API_TOKEN)
+    dp = Dispatcher()
+
     dp.message.register(cmd_start, Command("start"))
+    dp.message.register(echo_reverse, F.text)
+
     await dp.start_polling(bot)
 
 
