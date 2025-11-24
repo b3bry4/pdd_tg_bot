@@ -14,7 +14,7 @@ from aiogram.fsm.context import FSMContext
 
 
 load_dotenv()
-BOT_TOKEN = os.getenv("BOT_TOKEN")
+BOT_TOKEN = os.getenv("API_TOKEN")
 
 
 BILETI_PATHS = [
