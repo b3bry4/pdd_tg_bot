@@ -1,33 +1,24 @@
 import os
 import asyncio
 import logging
-import re
-import random
 
-import requests
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher, F, types
 from aiogram.filters import CommandStart
-from aiogram.types import Message, FSInputFile, InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import Message
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 
 
 load_dotenv()
-BOT_TOKEN = os.getenv("API_TOKEN")  # читаем токен из .env
-
-
-BILETI_PATHS = [
-    "bileti/",
-    # добавить билеты сюда
-]
+BOT_TOKEN = os.getenv("API_TOKEN")
 
 
 # --------- СОСТОЯНИЯ (FSM) ---------
 class BotMode(StatesGroup):
     learning = State()          # режим прорешивания билетов
     stats = State()             # режим статистики
-    marathon = State()          # режим рандомных марафона
+    marathon = State()          # режим рандомного марафона
     learning_mistakes = State() # режим отработки ошибок
 
 
@@ -58,7 +49,6 @@ def main_keyboard() -> types.ReplyKeyboardMarkup:
 # --------- /start ---------
 @dp.message(CommandStart())
 async def cmd_start(message: Message, state: FSMContext):
-    # на всякий случай очищаем состояние
     await state.clear()
     await message.answer(
         "Привет! Здесь ты можешь проходить билеты ПДД и проверять свои знания. "
@@ -67,7 +57,7 @@ async def cmd_start(message: Message, state: FSMContext):
     )
 
 
-# --------- КНОПКА НАЗАД (РАБОТАЕТ ИЗ ЛЮБОГО РЕЖИМА) ---------
+# --------- КНОПКА НАЗАД ---------
 @dp.message(F.text == "Назад")
 async def handle_back(message: Message, state: FSMContext):
     await state.clear()
