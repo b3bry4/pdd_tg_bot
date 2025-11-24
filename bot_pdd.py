@@ -1,37 +1,87 @@
 import os
 import asyncio
+import logging
+import re
+import random
 
+import requests
 from dotenv import load_dotenv
-from aiogram import Bot, Dispatcher, F
-from aiogram.filters import Command
-from aiogram.types import Message
+from aiogram import Bot, Dispatcher, F, types
+from aiogram.filters import CommandStart
+from aiogram.types import Message, FSInputFile, InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.fsm.state import State, StatesGroup
+from aiogram.fsm.context import FSMContext
 
-# грузим токен из .env
+
 load_dotenv()
-API_TOKEN = os.getenv("API_TOKEN")
-
-if not API_TOKEN:
-    raise ValueError("API_TOKEN не найден в .env")
+BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 
-async def cmd_start(message: Message):
-    await message.answer(
-        "Привет! Я пар"
+BILETI_PATHS = [
+    "bileti/",
+    # добавить билеты сюда
+]
+
+
+
+# --------- СОСТОЯНИЯ (FSM) ---------
+class BotMode(StatesGroup):
+    learning = State()    # режим прорешивания билетов
+    stats = State()  # режим статистики
+    marathon = State()    # режим рандомных марафона
+    learning_mistakes = State() # режим отработки ошибок
+
+
+    # --------- ИНИЦИАЛИЗАЦИЯ БОТА ---------
+bot = Bot(token=BOT_TOKEN)
+dp = Dispatcher()
+
+
+def main_keyboard() -> types.ReplyKeyboardMarkup:
+    """Главное меню."""
+    kb = [
+        [
+            types.KeyboardButton(text="Решать билеты🧐"),
+            types.KeyboardButton(text="Просмотреть статистику📊"),
+        ],
+        [
+            types.KeyboardButton(text="Режим марафона🏃🏃‍♂️"),
+            types.KeyboardButton(text="Отработать ошибки🥱")
+        ],
+    ]
+    return types.ReplyKeyboardMarkup(
+        keyboard=kb,
+        resize_keyboard=True,
+        input_field_placeholder="Что будем делать?"
     )
 
 
-async def echo_reverse(message: Message):
-    text = message.text or ""
-    await message.answer(text[::-1])
 
 
+# --------- /start ---------
+@dp.message(CommandStart())
+async def cmd_start(message: Message, state: FSMContext):
+    # на всякий случай очищаем состояние
+    await state.clear()
+    await message.answer(
+        "Привет! Здесь ты можешь проходить билеты ПДД и проверять свои знания. Выбирай билет и начинай тренировку",
+        reply_markup=main_keyboard(),
+    )
+
+
+# --------- КНОПКА НАЗАД (РАБОТАЕТ ИЗ ЛЮБОГО РЕЖИМА) ---------
+@dp.message(F.text == "Назад")
+async def handle_back(message: Message, state: FSMContext):
+    await state.clear()
+    await message.answer(
+        ".",
+        reply_markup=main_keyboard(),
+    )
+
+
+# --------- MAIN ---------
 async def main():
-    bot = Bot(token=API_TOKEN)
-    dp = Dispatcher()
-
-    dp.message.register(cmd_start, Command("start"))
-    dp.message.register(echo_reverse, F.text)
-
+    logging.basicConfig(level=logging.INFO)
     await dp.start_polling(bot)
 
 
