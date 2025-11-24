@@ -14,7 +14,7 @@ from aiogram.fsm.context import FSMContext
 
 
 load_dotenv()
-BOT_TOKEN = os.getenv("API_TOKEN")
+BOT_TOKEN = os.getenv("API_TOKEN")  # читаем токен из .env
 
 
 BILETI_PATHS = [
@@ -23,17 +23,16 @@ BILETI_PATHS = [
 ]
 
 
-
 # --------- СОСТОЯНИЯ (FSM) ---------
 class BotMode(StatesGroup):
-    learning = State()    # режим прорешивания билетов
-    stats = State()  # режим статистики
-    marathon = State()    # режим рандомных марафона
+    learning = State()          # режим прорешивания билетов
+    stats = State()             # режим статистики
+    marathon = State()          # режим рандомных марафона
     learning_mistakes = State() # режим отработки ошибок
 
 
-    # --------- ИНИЦИАЛИЗАЦИЯ БОТА ---------
-bot = Bot(token=API_TOKEN)
+# --------- ИНИЦИАЛИЗАЦИЯ БОТА ---------
+bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
 
@@ -46,7 +45,7 @@ def main_keyboard() -> types.ReplyKeyboardMarkup:
         ],
         [
             types.KeyboardButton(text="Режим марафона🏃🏃‍♂️"),
-            types.KeyboardButton(text="Отработать ошибки🥱")
+            types.KeyboardButton(text="Отработать ошибки🥱"),
         ],
     ]
     return types.ReplyKeyboardMarkup(
@@ -56,15 +55,14 @@ def main_keyboard() -> types.ReplyKeyboardMarkup:
     )
 
 
-
-
 # --------- /start ---------
 @dp.message(CommandStart())
 async def cmd_start(message: Message, state: FSMContext):
     # на всякий случай очищаем состояние
     await state.clear()
     await message.answer(
-        "Привет! Здесь ты можешь проходить билеты ПДД и проверять свои знания. Выбирай билет и начинай тренировку",
+        "Привет! Здесь ты можешь проходить билеты ПДД и проверять свои знания. "
+        "Выбирай билет и начинай тренировку",
         reply_markup=main_keyboard(),
     )
 
