@@ -33,7 +33,7 @@ class BotMode(StatesGroup):
 
 
     # --------- ИНИЦИАЛИЗАЦИЯ БОТА ---------
-bot = Bot(token=BOT_TOKEN)
+bot = Bot(token=API_TOKEN)
 dp = Dispatcher()
 
 
