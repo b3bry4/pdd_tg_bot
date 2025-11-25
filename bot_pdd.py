@@ -27,6 +27,11 @@ bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
 
+BILETI_PATHS = [
+    "",
+]
+
+
 def main_keyboard() -> types.ReplyKeyboardMarkup:
     """Главное меню."""
     kb = [
@@ -65,6 +70,20 @@ async def handle_back(message: Message, state: FSMContext):
         ".",
         reply_markup=main_keyboard(),
     )
+
+
+# --------- ВКЛЮЧЕНИЕ РЕЖИМОВ ---------
+@dp.message(F.text == "Режим решения билетов ПДД!")
+async def enable_learning_mode(message: Message, state: FSMContext):
+    await state.set_state(BotMode.learning)
+    await message.answer(
+        "Выбери вариант. Чтобы выйти нажми 'Назад'",
+        reply_markup=back_keyboard(),
+    )
+
+
+
+
 
 
 # --------- MAIN ---------
