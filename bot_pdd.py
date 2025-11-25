@@ -71,17 +71,18 @@ async def cmd_start(message: Message, state: FSMContext):
     )
 
 
-# ответ на кнопку назад
 @dp.message(F.text == "Назад")
 async def handle_back(message: Message, state: FSMContext):
     await state.clear()
     
-    msg = await message.answer(
-        "Возвращаю в главное меню...",
-        reply_markup=main_keyboard(),
-    )
+    msg = await message.answer("Возвращаю в главное меню...")
     await asyncio.sleep(2)
     await bot.delete_message(chat_id=msg.chat.id, message_id=msg.message_id)
+
+    await message.answer(
+        "Главное меню:",
+        reply_markup=main_keyboard()
+    )
 
 
 #удаляет ответ бота
