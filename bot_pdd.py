@@ -73,11 +73,11 @@ async def handle_back(message: Message, state: FSMContext):
 
 
 # --------- ВКЛЮЧЕНИЕ РЕЖИМОВ ---------
-@dp.message(F.text == "Режим решения билетов ПДД!")
+@dp.message(F.text == "Решать билеты🧐")
 async def enable_learning_mode(message: Message, state: FSMContext):
     await state.set_state(BotMode.learning)
     await message.answer(
-        "Выбери вариант. Чтобы выйти нажми 'Назад'",
+        "Выбери вариант билета. Чтобы выйти нажми 'Назад'",
         reply_markup=back_keyboard(),
     )
 
