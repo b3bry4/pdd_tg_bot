@@ -76,7 +76,7 @@ async def handle_back(message: Message, state: FSMContext):
     await state.clear()
     
     msg = await message.answer("Возвращаю в главное меню...")
-    await asyncio.sleep(2)
+    await asyncio.sleep(1)
     await bot.delete_message(chat_id=msg.chat.id, message_id=msg.message_id)
 
     await message.answer(
