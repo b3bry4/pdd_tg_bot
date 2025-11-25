@@ -14,15 +14,14 @@ load_dotenv()
 BOT_TOKEN = os.getenv("API_TOKEN")
 
 
-# --------- СОСТОЯНИЯ (FSM) ---------
+#состояния
 class BotMode(StatesGroup):
     learning = State()          # режим прорешивания билетов
     stats = State()             # режим статистики
     marathon = State()          # режим рандомного марафона
     learning_mistakes = State() # режим отработки ошибок
 
-
-# --------- ИНИЦИАЛИЗАЦИЯ БОТА ---------
+#инициализация
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
@@ -32,8 +31,8 @@ BILETI_PATHS = [
 ]
 
 
+#клавиатура главного меню
 def main_keyboard() -> types.ReplyKeyboardMarkup:
-    """Главное меню."""
     kb = [
         [
             types.KeyboardButton(text="Решать билеты🧐"),
@@ -51,7 +50,17 @@ def main_keyboard() -> types.ReplyKeyboardMarkup:
     )
 
 
-# --------- /start ---------
+#клавиатура с кнопкой "Назад"
+def back_keyboard() -> types.ReplyKeyboardMarkup:
+    kb = [[types.KeyboardButton(text="Назад")]]
+    return types.ReplyKeyboardMarkup(
+        keyboard=kb,
+        resize_keyboard=True,
+        input_field_placeholder="«Назад» - выйти в главное меню",
+    )
+
+
+#/start
 @dp.message(CommandStart())
 async def cmd_start(message: Message, state: FSMContext):
     await state.clear()
@@ -62,17 +71,20 @@ async def cmd_start(message: Message, state: FSMContext):
     )
 
 
-# --------- КНОПКА НАЗАД ---------
+# ответ на кнопку назад
 @dp.message(F.text == "Назад")
 async def handle_back(message: Message, state: FSMContext):
     await state.clear()
     await message.answer(
-        ".",
+        "Возвращаю в главное меню...",
         reply_markup=main_keyboard(),
     )
 
 
 # --------- ВКЛЮЧЕНИЕ РЕЖИМОВ ---------
+
+
+#режим решения билетов
 @dp.message(F.text == "Решать билеты🧐")
 async def enable_learning_mode(message: Message, state: FSMContext):
     await state.set_state(BotMode.learning)
@@ -82,6 +94,7 @@ async def enable_learning_mode(message: Message, state: FSMContext):
     )
 
 
+#режим 2
 
 
 
