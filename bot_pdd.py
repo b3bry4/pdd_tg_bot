@@ -80,7 +80,7 @@ async def handle_back(message: Message, state: FSMContext):
     await bot.delete_message(chat_id=msg.chat.id, message_id=msg.message_id)
 
     await message.answer(
-        "Главное меню:",
+        "Вы в главном меню. Что будем делать?",
         reply_markup=main_keyboard()
     )
 
