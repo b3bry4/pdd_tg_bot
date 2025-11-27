@@ -71,6 +71,7 @@ async def cmd_start(message: Message, state: FSMContext):
     )
 
 
+#удаляет ответ бота
 @dp.message(F.text == "Назад")
 async def handle_back(message: Message, state: FSMContext):
     await state.clear()
@@ -85,11 +86,7 @@ async def handle_back(message: Message, state: FSMContext):
     )
 
 
-#удаляет ответ бота
-
-
-
-# --------- ВКЛЮЧЕНИЕ РЕЖИМОВ ---------
+#включение режимов бота
 
 
 #режим решения билетов
@@ -102,12 +99,12 @@ async def enable_learning_mode(message: Message, state: FSMContext):
     )
 
 
-#режим 2
+#режим 
 
 
 
 
-# --------- MAIN ---------
+#main
 async def main():
     logging.basicConfig(level=logging.INFO)
     await dp.start_polling(bot)
