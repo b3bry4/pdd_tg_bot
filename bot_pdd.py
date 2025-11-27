@@ -99,8 +99,14 @@ async def enable_learning_mode(message: Message, state: FSMContext):
     )
 
 
-#режим 
-
+#режим просмотра статистики
+@dp.message(F.text == "Просмотреть статистику📊")
+async def enable_stats_mode(message: Message, state: FSMContext):
+    await state.set_state(BotMode.stats)
+    await message.answer(
+        "Ваша статистика:", 
+        reply_markup=back_keyboard(),
+    )
 
 
 
