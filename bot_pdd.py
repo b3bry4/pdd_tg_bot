@@ -39,7 +39,7 @@ def main_keyboard() -> types.ReplyKeyboardMarkup:
             types.KeyboardButton(text="Просмотреть статистику📊"),
         ],
         [
-            types.KeyboardButton(text="Режим марафона🏃🏃‍♂️"),
+            types.KeyboardButton(text="Режим марафона🏃‍♂️"),
             types.KeyboardButton(text="Отработать ошибки🥱"),
         ],
     ]
@@ -108,6 +108,15 @@ async def enable_stats_mode(message: Message, state: FSMContext):
         reply_markup=back_keyboard(),
     )
 
+
+#режим марафона
+@dp.message(F.text == "Режим марафона🏃‍♂️")
+async def enable_marathon_mode(message: Message, state: FSMContext):
+    await state.set_state(BotMode.stats)
+    await message.answer(
+        "Режим марафона включен:", 
+        reply_markup=back_keyboard(),
+        )
 
 
 #main
