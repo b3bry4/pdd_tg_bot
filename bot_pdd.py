@@ -133,6 +133,34 @@ async def mistakes_mode(message: Message, state: FSMContext):
 #---обработчики---
 
 
+#решение билетов !!
+async def learning_mode(callback: types.CallbackQuery, state: FSMContext):
+    # если мы не в режиме фото — игнор
+    if await state.get_state() != BotMode.photo.state:
+        await callback.answer()
+        return
+
+    if not BILETI_PATHS:
+        await callback.message.answer(
+            "Пока нет ни одной фотки, добавь их в коде в PHOTO_PATHS.",
+            reply_markup=photo_inline_kb(),
+        )
+        await callback.answer()
+        return
+
+    photo_path = random.choice(PHOTO_PATHS)
+
+    try:
+        photo = FSInputFile(photo_path)
+        await callback.message.answer_photo(photo, reply_markup=photo_inline_kb())
+    except FileNotFoundError:
+        await callback.message.answer(
+            f"Не нашёл файл '{photo_path}'. Проверь пути к фоткам.",
+            reply_markup=photo_inline_kb(),
+        )
+
+    await callback.answer()
+
 
 
 
