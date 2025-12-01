@@ -95,7 +95,7 @@ async def handle_back(message: Message, state: FSMContext):
 async def enable_learning_mode(message: Message, state: FSMContext):
     await state.set_state(BotMode.learning)
     await message.answer(
-        "Выбери вариант билета. Чтобы выйти нажми 'Назад'",
+        "Выбери вариант билета. Чтобы выйти нажми 'Назад':",
         reply_markup=back_keyboard(),
     )
 
