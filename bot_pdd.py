@@ -119,6 +119,18 @@ async def enable_marathon_mode(message: Message, state: FSMContext):
         )
 
 
+#режим отработки ошибок
+@dp.message(F.text == "Отработать ошибки🥱")
+async def mistakes_mode(message: Message, state: FSMContext):
+    await state.set_state(BotMode.stats)
+    await message.answer(
+        "Режим отработки ошибок включен:", 
+        reply_markup=back_keyboard(),
+        )
+
+
+
+
 #main
 async def main():
     logging.basicConfig(level=logging.INFO)
