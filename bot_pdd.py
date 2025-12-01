@@ -21,6 +21,7 @@ class BotMode(StatesGroup):
     marathon = State()          # режим рандомного марафона
     learning_mistakes = State() # режим отработки ошибок
 
+
 #инициализация
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
@@ -86,7 +87,7 @@ async def handle_back(message: Message, state: FSMContext):
     )
 
 
-#включение режимов бота
+#---включение режимов бота---
 
 
 #режим решения билетов
@@ -127,6 +128,10 @@ async def mistakes_mode(message: Message, state: FSMContext):
         "Режим отработки ошибок включен:", 
         reply_markup=back_keyboard(),
         )
+
+
+#---обработчики---
+
 
 
 
